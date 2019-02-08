@@ -1,0 +1,138 @@
+<!-- here employeeForm is template refrence variable here it is set to angular form -->
+<!-- by default in angular4 or later default form validation is not set we can set using ngNativeValidate directive in form tag and then check required validation in full name by also remove that directive  -->
+<!-- <form #employeeForm="ngForm"  (ngSubmit)="saveEmployee(employeeForm)"> this isfor angular generated form here pass template ref variable -->
+    <form #employeeForm="ngForm"  (ngSubmit)="saveEmployee(employee)">
+<div class="panel panel-primary">
+  <div class="panel-heading">
+    <h3 class="panel-title">Create Employee</h3>
+  </div>
+
+  <div class="panel-body"></div>
+
+    <div class="form-group" [class.has-error]="name.invalid && name.touched">
+      <!-- here with label we use for to associate label with textbox if click on label fummname textbox then get highlighted bcoz of this. -->
+      <label for="Name" class="control-label"> Name: </label>
+      <input id="Name" required name="fn" [(ngModel)]="employee.name" type="text" #name="ngModel" class="form-control"/>
+     <span class="help-block" *ngIf="name.invalid && name.touched"> Name is required </span>
+    </div>
+
+  <!-- onlly check in form 
+ <div>touched: {{namectrl.touched}}</div>
+<div>untouched: {{namectrl.untouched}}</div> -->
+  
+<!-- in form level check validation
+<div>touched: {{employeeForm.touched}}</div>
+<div>untouched: {{employeeForm.untouched}}</div>  -->
+
+
+    <div class="form-group" [class.has-error]="email.invalid && email.touched">
+        <label for="email" class="control-label">Email: </label>
+        <!-- here required and email ar two validator required is for fill value and email is for fill correct email value. -->
+        <!--email input field here #email=ngmodal means exporting ngmodal directive  into a template ref var else this email will be invalid  -->
+        <!--can use pattern in place of email <input id="email" required  pattern="^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$"  name="em" [(ngModel)]="employee.email" #email="ngModel" type="text" class="form-control"/> -->
+        <input id="email" required  email  name="em" [(ngModel)]="employee.email" #email="ngModel" type="text" class="form-control"/>
+        <span class="help-block" *ngIf="email.errors && email.errors.required && email.touched"> Email is required </span>
+       <!-- here first checking email.error is for checking email field is not null or undefined before checking email.error.requird for required is caught for error property-->
+       <!-- can also use safe navigation oerator ? inplace of twice email.error in 2nd span it protects against null and undefined value same can also use in requred also-->
+       <span class="help-block" *ngIf="email.errors?.email && email.touched"> Email is invalid </span> 
+       <!-- <span class="help-block" *ngIf="email.errors?.pattern && email.touched"> Email is invalid </span>  -->
+      </div>
+
+
+
+      <div class="form-group">
+          <label for="phoneNumber">Phone Number: </label>
+          <input id="phoneNumber" name="pn" [(ngModel)]="employee.phoneNumber" type="number" class="form-control"/>
+        </div>
+
+        <div class="form-group">
+            <label>Contact Prefrences: </label>
+            <div class="form-control"> 
+               <label class="radio-inline">
+                 <!-- use name here name is imp attribute with same value to make radio button mutually exclusive -->
+                  <input type="radio" value="phone" name="contactPrefrences" [(ngModel)]="employee.contactPrefrence"/>
+                  Phone
+              </label>
+              <label class="radio-inline">
+                  <input type="radio" value="email"  name="contactPrefrences" [(ngModel)]="employee.contactPrefrence" />
+                  Email
+              </label>
+            </div> 
+        </div>
+    
+
+        <div class="form-group">
+            <div class="form-control">
+            <label class="checkbox-inline">
+            <input  name="ia" [(ngModel)]="employee.isActive" type="checkbox"/>
+            Is Active 
+          </label>
+          </div>
+        </div>
+
+
+    <div class="form-group" [class.has-error]="gender.invalid && gender.touched">
+        <label class="control-label">Gender: </label>
+        <div class="form-control"> 
+           <label class="radio-inline">
+             <!-- if we use diabled property by default disabled form control are no included in angular auto generated form model -->
+             <!-- use name here name is imp attribute with same value to make radio button mutually exclusive -->
+              <input type="radio" required  #gender="ngModel" value="male" name="gender" [(ngModel)]="employee.gender"/>
+              Male
+          </label>
+          <label class="radio-inline">
+              <input type="radio" required #gender="ngModel" value="female"  name="gender" [(ngModel)]="employee.gender" />
+              Female
+          </label>
+        </div>    
+        <span class="help-block" *ngIf="gender.invalid && gender.touched"> Gender is required </span>  
+    </div>
+
+
+    <div class="form-group">
+        
+        <label for="department">Department:</label>
+        <select id="department" name="department" [(ngModel)]="employee.department" class="form-control">
+         <option *ngFor='let dept of departments' [value]='dept.id'> <!--here [value] property binding to bind by id-->
+           {{dept.name}}
+            </option>
+          <!-- <option value="1">Help Desk</option>
+         <option value="2">IT</option>
+         <option value="3">Sales</option>
+         <option value="4">Marketing</option> -->
+        </select>
+  
+<!-- here using ngx bootstrap UI(see its documentation firstly install then npm install ngx-bootstrap)for same user eperience in diff browsers for date so here using its directive in dob -->
+      <div class="row"> 
+          <div class="form-group col-md-5">
+            <label for="dateOfBirth">Date Of Birth: </label>
+            <input id="dateOfBirth" name="dateOfBirth" [(ngModel)]="employee.dateOfBirth" bsDatepicker type="text" class="form-control" [bsConfig]='datepickerconfig'/>
+          </div>
+        </div> 
+      
+        <div class="form-group">
+            <label for="photoPath">Photo Path: </label>
+            <input id="photoPhotoPathPath" name="photoPath" [(ngModel)]="employee.photoPath" type="text" class="form-control"/>
+          </div>
+
+          <div class="form-group">
+              <button type="submit" (click) ="togglePhotoPreview()"  class="btn btn-primary">
+                {{previewPhoto ? "Hide " : "Show "}} Preview</button>
+            </div> 
+         
+            <div class="form-group">
+                <img [src]="photoPath" height="200px" width="200px" *ngIf="previewPhoto" />
+              </div>
+    </div>
+  
+    <div class="panel-footer">
+      <button type="submit" class="btn btn-primary" [disabled]="employeeForm.invalid">Save</button>
+    </div> 
+
+</div>
+<!-- </div>   -->
+</form>
+
+Angular generated form modal: {{employeeForm.value | json}}
+<br>
+Our Employee Modal: {{employee | json}}
